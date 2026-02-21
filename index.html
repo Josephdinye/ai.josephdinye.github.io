@@ -147,40 +147,40 @@
     document.getElementById("loading").style.display = "block";
 
     try {
-      const payload = {
-        model: MODEL,
-        messages: [{ role: "user", content: text }],
-        temperature: 0.7,
-        max_tokens: 500
-      };
+  const payload = {
+    model: MODEL,
+    messages: [{ role: "user", content: text }],
+    temperature: 0.7,
+    max_tokens: 500
+  };
 
-      // If you want image analysis later (with vision model):
-      // if (currentFilePreview) payload.messages[0].content = [{ type: "text", text }, { type: "image_url", image_url: { url: currentFilePreview } }];
+  const res = await fetch("https://groq-proxy-ai.josephdinye9.workers.dev/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+      // NO Authorization here — key lives in Worker secrets only!
+    },
+    body: JSON.stringify(payload)
+  });
 
-      const res = await fetch("https://https://groq-proxy-ai.josephdinye9.workers.dev/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error?.message || `HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
-      const reply = data.choices[0].message.content;
-      addMessage(reply);
-    } catch (err) {
-      addMessage("Error: " + err.message);
-      console.error(err);
-    } finally {
-      document.getElementById("loading").style.display = "none";
-    }
+  if (!res.ok) {
+    let errorMsg = `HTTP ${res.status}`;
+    try {
+      const err = await res.json();
+      errorMsg += ` - ${err.error?.message || 'Unknown error'}`;
+    } catch {}
+    throw new Error(errorMsg);
   }
+
+  const data = await res.json();
+  const reply = data.choices[0].message.content;
+  addMessage(reply);
+} catch (err) {
+  addMessage("Error: " + err.message);
+  console.error("Fetch failed:", err);
+} finally {
+  document.getElementById("loading").style.display = "none";
+}
 
   // Send on Enter
   document.getElementById("user-input").addEventListener("keypress", e => {
