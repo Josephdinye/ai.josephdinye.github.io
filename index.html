@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My AI Chat – ai.josephdinyne.tech</title>
+  <title>Joseph's AI Chat</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     body { font-family: Arial, sans-serif; margin: 0; background: #f0f2f5; height: 100vh; display: flex; flex-direction: column; }
@@ -157,7 +157,7 @@
       // If you want image analysis later (with vision model):
       // if (currentFilePreview) payload.messages[0].content = [{ type: "text", text }, { type: "image_url", image_url: { url: currentFilePreview } }];
 
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const res = await fetch("https://https://groq-proxy-ai.josephdinye9.workers.dev/chat/completions", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${API_KEY}`,
